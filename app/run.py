@@ -43,6 +43,21 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    
+    # Second graph, we will look as the most frequent x categories (set x on most_frequent below). 
+    # Most frequent services may be over loaded.
+    most_frequent = 5
+    most_frequent_categories = df.iloc[:,4:].sum().sort_values(ascending=False)[:most_frequent]
+    most_frequent_categories_names = list(most_frequent_categories.index)
+    
+    
+    # Thurdt graph, we will look as the least frequent x categories (set x on least_frequent below). 
+    # Least freqent may mean these services are less developed due to less demand, and require more attention
+    least_frequent = 5
+    least_frequent_categories = df.iloc[:,4:].sum().sort_values(ascending=True)[:least_frequent]
+    least_frequent_categories_names = list(least_frequent_categories.index)
+    
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +76,42 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=most_frequent_categories_names,
+                    y=most_frequent_categories
+                )
+            ],
+
+            'layout': {
+                'title': 'Most Frequent Categories',
+                'yaxis': {
+                    'title': "Number"
+                },
+                'xaxis': {
+                    'title': "Categories"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=least_frequent_categories_names,
+                    y=least_frequent_categories
+                )
+            ],
+
+            'layout': {
+                'title': 'Least Used Categories',
+                'yaxis': {
+                    'title': "Number"
+                },
+                'xaxis': {
+                    'title': "Categories"
                 }
             }
         }
@@ -93,7 +144,7 @@ def go():
 
 
 def main():
-    app.run(host='127.0.0.0', port=3001, debug=True)
+    app.run(host='0.0.0.0', port=3001, debug=True)
 
 
 if __name__ == '__main__':
